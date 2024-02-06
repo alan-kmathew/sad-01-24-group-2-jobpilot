@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'nodejs'
+    }
+
     environment {
         // Assuming these are correctly set in your Jenkins credentials and environment
         HEROKU_API_KEY = credentials('HEROKU_API_KEY')
