@@ -27,7 +27,7 @@ pipeline {
                     sh 'dir'
                     sh 'ls'
                     sh 'npm install'
-                    sh 'npm run build'
+                    sh 'npm start'
                     // Ensure the build artifacts are in the right location for deployment
                 }
             }
