@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+    
     tools {
         nodejs 'nodejs'
     }
@@ -12,7 +13,7 @@ pipeline {
     }
 
     stages {
-        
+
         stage('Checkout') {
             steps {
                 checkout scm
