@@ -34,6 +34,8 @@ pipeline {
                     echo 'Deploying to Heroku...'
                     sh """
                         heroku --version
+                        heroku whoami
+                        heroku login
                         heroku git:remote -a $HEROKU_APP_NAME  # Add Heroku Git remote
                         git push heroku HEAD:main -f  # Push code to Heroku
                     """
