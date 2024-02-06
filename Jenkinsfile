@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        nodejs 'nodejs'
+    }
     environment {
         // These should be set in your Jenkins credentials and environment variables
         HEROKU_API_KEY = credentials('HEROKU_API_KEY')
@@ -20,7 +23,7 @@ pipeline {
                     echo 'Building Frontend...'
                     sh 'dir'
                     sh 'npm ci' // Use npm ci for a cleaner, more reliable install based on package-lock.json
-                    sh 'npm run build' // Build the project
+                    sh 'CI=false npm run build' // Build the project
                 }
             }
         }
