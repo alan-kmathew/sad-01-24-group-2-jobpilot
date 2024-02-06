@@ -4,11 +4,12 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #666666;
+    background-color: #474e5d;
   }
   
   .page-content {
     flex-grow: 1;
     /* padding: 24px; */
+    
   }
   

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import '../styles/AssistantAI.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane, faRobot, faUser, faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import { sendMessageToAssistant, createNewThread } from '../services/AssistantAIService'; 
+import { faRobot, faUser, faArrowsRotate, faCircleArrowRight} from '@fortawesome/free-solid-svg-icons';
+import { sendMessageToAssistant, createNewThread } from '../services/AssistantAIService';
+
 
 const AssistantAI = ({ messages, setMessages }) => {
   const [inputValue, setInputValue] = useState('');
@@ -57,9 +58,16 @@ const AssistantAI = ({ messages, setMessages }) => {
               icon={message.type === 'user' ? faUser : faRobot}
               className="message-icon"
             />
-            <span className={`message-content ${message.type}`}>
-              {message.text}
-            </span>
+            {message.type === 'ai' ? (
+              <div
+                className={`message-content ${message.type}`}
+                dangerouslySetInnerHTML={{ __html: message.text }}
+              />
+            ) : (
+              <span className={`message-content ${message.type}`}>
+                {message.text}
+              </span>
+            )}
           </div>
         ))}
         {isTyping && (
@@ -71,17 +79,17 @@ const AssistantAI = ({ messages, setMessages }) => {
       </div>
       <div className="chat-input-area">
         <button className="refresh-button" onClick={handleRefresh}>
-          <FontAwesomeIcon icon={faRotateRight} />
+          <FontAwesomeIcon icon={faArrowsRotate} />
         </button>
         <textarea
           className="chat-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Message Assistant AI..."
+          placeholder="Enter a prompt here"
         />
         <button className="send-button" onClick={sendMessage}>
-          <FontAwesomeIcon icon={faPaperPlane} />
+          <FontAwesomeIcon icon={faCircleArrowRight} />
         </button>
       </div>
     </div>

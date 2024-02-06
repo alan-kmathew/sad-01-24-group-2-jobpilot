@@ -5,7 +5,6 @@ const routes = require('./routes/routes');
 const jobRoutes = require('./routes/job.router');
 const loadSwaggerSpec = require('./middleware/swagger');
 const app = express();
-const cors = require('cors');
 
 app.use(cors());
 
@@ -23,7 +22,7 @@ app.use(express.json(), (err, req, res, next) => {
 });
 
 const swaggerSpec = loadSwaggerSpec();
-app.use(cors());
+
 app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/', routes);

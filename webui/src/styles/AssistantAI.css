@@ -47,8 +47,9 @@
   
   .message-row.user .message-content {
     order: 1;
-    background-color: #eeeeee;
+    background-color: #979797;
     margin-left: auto;
+
   }
   
   .message-icon {
@@ -68,7 +69,7 @@
   }
   
   .message-content.ai {
-    background-color: #eeeeee;
+    background-color: #979797;
   }
   
   .typing-indicator {
@@ -93,14 +94,15 @@
     display: flex;
     align-items: center;
     padding: 10px;
+  
   }
 
   .refresh-button {
-    padding: 10px 20px;
+    padding: 7px 12px;
     background-color: #eeeeee;
     color: #000000;
     border: 1px solid #000000;
-    border-radius: 4px;
+    border-radius: 13px;
     cursor: pointer;
   }
   
@@ -113,17 +115,26 @@
     padding: 10px;
     margin-right: 10px;
     margin-left: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #eeeeee;
     border-radius: 4px;
     font-size: 16px; 
+    font-family: Arial, Helvetica, sans-serif;
   }
   
+  .svg-inline--fa {
+    display: var(--fa-display, inline-block);
+    height: 2.00em;
+    overflow: visible;
+    vertical-align: -1.125em;
+
+  }
+
   .send-button {
-    padding: 10px 20px;
+    padding: 7px 12px;
     background-color: #eeeeee;
     color: #000000;
     border: 1px solid #000000;
-    border-radius: 4px;
+    border-radius: 13px;
     cursor: pointer;
   }
   

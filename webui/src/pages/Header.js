@@ -1,4 +1,6 @@
 import React from 'react';
+import Avatar from '@mui/material/Avatar';
+import UserPopover from './UserPopover.js'; 
 import appLogo from '../assets/logoJobpilot.png'; // Adjust the path as needed
 import profilePic from '../assets/logoElement.png'; // Adjust the path as needed
 import '../styles/Header.css';
@@ -18,8 +20,8 @@ const Header = ({ onSelection, currentPage }) => {
           <button className={`header-button ${isCurrentPage('AboutUs') ? 'active' : ''}`} onClick={() => onSelection('AboutUs')}>About Us</button>
         </div>
         
-        <div className="profile-section" onClick={() => onSelection('UserPage')}>
-          <img src={profilePic} alt="Profile" className="profile-pic" />
+        <div className="profile-section" onClick={() => onSelection('UserPopover')}>
+        <UserPopover />
         </div>
       </div>
     </div>

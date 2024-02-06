@@ -1,13 +1,11 @@
 const { OAuth2Client } = require('google-auth-library');
-const { getClientIdentityTokens } = require('../services/auth.services');
 const { logger } = require('../middleware/logging');
 
 const createOAuth2Client = async () => {
     try {
-        const { googleClientId, googleClientSecret } = await getClientIdentityTokens();
         const oAuth2Client = new OAuth2Client({
-            clientId: googleClientId,
-            clientSecret: googleClientSecret,
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             redirectUri: process.env.GOOGLE_CALLBACK_URL,
         });
         return oAuth2Client;

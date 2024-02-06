@@ -1,26 +1,32 @@
 import React, { useEffect, useState, useCallback } from "react";
 import '../styles/loginIndex.css';  // Import the stylesheet
+import appLogo from '../assets/logoJobpilot.png'; 
+import gmailImage from '../assets/gmail 1.png';
+import jobTracker from '../assets/jobTracker.png';
+import openAI from '../assets/openAI.png';
 
 
 
 const cardItems = [
   {
     id: 1,
-    title: "Job Pilot",
-    copy:
-      "Your Entire Job Search on one Dashboard"
+    text: "Your Entire Job Search on one Dashboard, Organize your job search Keep track of your applications, interviews, and follow-ups all in one place.",
+    image: jobTracker,
+    customClass: "jobCard" 
   },
   {
     id: 2,
-    title: "Hint:",
-    copy: "Please sign in with your Job Application Gmail ID"
+    text: "Please sign in with Gmail ID which you use to apply job",
+    image: gmailImage
   },
   {
     id: 3,
-    title: "Feature",
-    copy:
-      "Search for jobs, track your applications"
+    text: "Search for jobs - AI Chatbot,help you to find your desired job,  It make you ease with your application",
+    image: openAI,
+    customClass: "openAI" 
   }
+ 
+
 ];
 
 function determineClasses(indexes, cardIndex) {
@@ -75,9 +81,9 @@ function Login() {
     window.open("http://localhost:4000/api/auth/google", "_self")
   }
   return (
-    <div >
+    <div className="appContainer">
       <nav className="navbar">
-        <p className="fontBold">Job Pilot</p>
+      <img src={appLogo} alt="App Logo" className="app-logo" />
         <div></div>
       </nav>
       <main className="container1">
@@ -90,8 +96,8 @@ function Login() {
                   key={card.id}
                   className={`card ${determineClasses(indexes, index)}`}
                 >
-                  <h2>{card.title}</h2>
-                  <p>{card.copy}</p>
+                <img className="card-image" src={card.image} alt={`Card ${card.id}`} />
+                {card.text && <p className={`card-text  ${card.customClass}`}>{card.text}</p>}
                 </li>
               ))}
             </ul>

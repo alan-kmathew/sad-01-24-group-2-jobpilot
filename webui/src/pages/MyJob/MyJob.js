@@ -5,14 +5,18 @@ import Typography from '@mui/material/Typography';
 import AppWidgetSummary from './MyJobWidgetSummary.js';
 import AppCurrentVisits from './MyJobCurrentVisits.js';
 import MyJobView from './TableView/myjob-view.js';
+import bagIcon from '../../assets/icons/glass/ic_glass_bag.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faCalendarCheck, faCircle, faCircleXmark, faEnvelopesBulk, faListCheck } from '@fortawesome/free-solid-svg-icons'
+
 
 
 const categorizeStatus = (status) => {
   const categories = {
-    applied: ["Applied", "Application Submitted", "Application received", "Submitted", "Applied"],
-    rejected: ["Rejected", "Application Rejected", "Rejected due to insufficient German proficiency", "application rejected", "rejected"],
-    inProgress: ["Under Review", "Application Under Review", "Application received and under Review", "Application submitted, waiting for response", "Application under review", "Successfully submitted application, pending review", "Your application has been received and is under review", "Received", "Under Review", "We will be in contact with you as soon as possible.", "application sent and awaiting further processing"],
-    interviewsGiven: ["Interviews given"],
+    applied: ["Application sent", "Application submitted", "Application Received", "Received", "Application Completed", "Applied",],
+    rejected: ["Rejected", "Application Rejected", "Application Declined", "application declined", "Not Accepted", "Not Selected", "Not considered", "Application not taken into further consideration", "Application did not meet the requirements", "Your application has been reviewed for this position and while your profile is interesting, we have decided to pursue other candidates.", "Not able to move forward in the recruiting process with you", "rejected", "Not able to move forward in the recruiting process"],
+    inProgress: ["Application under review", "Under Review", "Your application has been received and is under review", "successfully submitted application, pending review", "We will be in contact with you as soon as possible.", "Application received and under review", "Application submitted, waiting for response", "successfully submitted application, pending review"],
+    interviewsGiven: ["you have been selected for next round", "selected"],
   };
 
   for (const category in categories) {
@@ -20,7 +24,7 @@ const categorizeStatus = (status) => {
       return category;
     }
   }
-  return "other";
+  return "applied";
 };
 
 const calculateCategorizedStatusCounts = (data) => {
@@ -48,6 +52,8 @@ const calculateCategorizedStatusCounts = (data) => {
         break;
     }
   });
+
+
   const summary = {
     Applied,
     InProgress,
@@ -58,97 +64,74 @@ const calculateCategorizedStatusCounts = (data) => {
   return summary;
 };
 
-
-// const calculateStatusSummary = (data) => {
-//   let totalObjects = 0;
-//   let statusCounts = {};
-  
-//   data.forEach((item) => {
-//     totalObjects++;
-//     const status = item.status;
-//     if (statusCounts[status]) {
-//       statusCounts[status]++;
-//     } else {
-//       statusCounts[status] = 1;
-//     }
-//   });
-
-//   const summary = {
-//     totalObjects,
-//     statusCounts,
-//   };
-
-//   return summary;
-// };
-
 export default function MyJob(props) {
   const { myJobData } = props;
   const result = calculateCategorizedStatusCounts(myJobData);
-  console.log('result--------->',result);
-
   const chartData = Object.keys(result).map((category) => ({
     label: category,
     value: result[category],
   }));
 
-console.log("chartData-------------->",chartData)
   return (
     <Container maxWidth="xl">
-    <Typography variant="h4" sx={{ mb: 5 }}>
-      Hi, Welcome To My Job 👋
-    </Typography>
+      <Typography variant="h4" sx={{ mb: 5 }}>
+      </Typography>
 
-    <Grid container spacing={3}>
-      <Grid xs={12} sm={6} md={3}>
-        <AppWidgetSummary
-          title="Applied Applications"
-          total={result.Applied}
-          color="success"
-          icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
-        />
-      </Grid>
 
-      <Grid xs={12} sm={6} md={3}>
-        <AppWidgetSummary
-          title="Application In progress"
-          total={result.InProgress}
-          color="info"
-          icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
-        />
-      </Grid>
 
-      <Grid xs={12} sm={6} md={3}>
-        <AppWidgetSummary
-          title="Interviews Given"
-          total={result.Interviews}
-          color="warning"
-          icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
-        />
-      </Grid>
+      <Grid container spacing={1}>
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Applied Applications"
+            total={result.Applied}
+            color="success"
+            icon={
+             <FontAwesomeIcon icon={faEnvelopesBulk}  size="4x" beat/>}
+          />
+        </Grid>
 
-      <Grid xs={12} sm={6} md={3}>
-        <AppWidgetSummary
-          title="Rejection"
-          total={result.Rejected}
-          color="error"
-          icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
-        />
-      </Grid>
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Application progress"
+            total={result.InProgress}
+            color="info"
+            icon={
+              <FontAwesomeIcon icon={faListCheck} size="4x" flip />}
+          />
+        </Grid>
 
-      <Grid xs={12} md={6} lg={8}>
-       <MyJobView myJobData={myJobData}/>
-      </Grid>
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Interviews Given"
+            total={result.Interviews}
+            color="warning"
+            icon={<FontAwesomeIcon icon={faCalendarCheck} size="4x" bounce />}
+          />
+        </Grid>
 
-      <Grid xs={12} md={6} lg={4}>
-        <AppCurrentVisits
-          title="Application Status"
-          chart={{
-            series: chartData,
-          }}
-        />
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Rejection"
+            total={result.Rejected}
+            color="error"
+            icon={<FontAwesomeIcon icon={faCircleXmark} size="4x" beat />}
+          />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={8}>
+          <MyJobView myJobData={myJobData} />
+        </Grid>
+
+        <Grid xs={12} md={6} lg={4}>
+          <AppCurrentVisits
+            title="Application Status"
+            chart={{
+              series: chartData,
+            }}
+          />
+        </Grid>
       </Grid>
-    </Grid>
-  </Container>
+    </Container>
   );
 };
 

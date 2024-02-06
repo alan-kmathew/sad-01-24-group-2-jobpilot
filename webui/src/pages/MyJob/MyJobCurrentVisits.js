@@ -1,14 +1,9 @@
 import PropTypes from 'prop-types';
-
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import { styled, useTheme } from '@mui/material/styles';
-
 import { fNumber } from '../../utils/format-number';
-
 import Chart, { useChart } from '../../components/chart';
-
-// ----------------------------------------------------------------------
 
 const CHART_HEIGHT = 400;
 
@@ -26,11 +21,9 @@ const StyledChart = styled(Chart)(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
-
 export default function AppCurrentVisits({ title, subheader, chart, ...other }) {
   const theme = useTheme();
-
+console.log("chart---11111------------->",chart);
   const { colors, series, options } = chart;
 
   const chartSeries = series.map((i) => i.value);

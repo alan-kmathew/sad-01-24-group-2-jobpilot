@@ -3,7 +3,6 @@ import { Container } from '@mui/material';
 import SearchBar from './SearchBar.js'; 
 import JobCards from './JobCards.js'; 
 
-
 const JobSearch = () => {
   const [jobs, setJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');

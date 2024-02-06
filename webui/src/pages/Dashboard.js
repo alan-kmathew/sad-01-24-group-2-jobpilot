@@ -10,13 +10,14 @@ import UserPage from '../pages/UserPage.js';
 import Footer from '../pages/Footer.js';
 import '../styles/Dashboard.css';
 import Cookies from 'js-cookie';
+import Loading from '../components/loader/loading.jsx';
 import { fetchMyJobData } from '../apicalls/api.js';
 import { handleApiError } from '../apicalls/helpers.js';
 
 const Dashboard = () => {
   const navigate = useNavigate(); // Create a history object
   const [selectedPage, setSelectedPage] = useState('Home');
-  const [loading, setLoading] = useState({ isLoading: false, message: '' });
+  const [loading, setLoading] = useState(false);
   const [assistantMessages, setAssistantMessages] = useState([
     { type: 'ai', text: 'Hello! How can I assist you today?' }
   ]);
@@ -34,18 +35,18 @@ const Dashboard = () => {
     if (email && accessToken) {
       const fetchDataFromApi = async () => {
         try {
-          setLoading({ isLoading: true, message: 'Fetching data...' });
+     
+          setLoading(true);
           const result = await fetchMyJobData({ email, accessToken, expiryDate, refreshToken });
           setMyJobData(result);
         } catch (error) {
           handleApiError(error);
-
           // Check for a 500 error and redirect to the login screen
           if (error.response && error.response.status === 500 && selectedPage === 'MyJob') {
             navigate('/login'); // Redirect to the login page
           }
         } finally {
-          setLoading({ isLoading: false, message: '' });
+          setTimeout(() => setLoading(false), 3300)
         }
       };
       fetchDataFromApi();
@@ -59,9 +60,10 @@ const Dashboard = () => {
   const renderPage = () => {
     switch (selectedPage) {
       case 'MyJob':
-        if (loading.isLoading) {
-          return <p>{loading.message}</p>;
-        } else if (myJobData === null) {
+        if (loading) {
+          return<Loading/>
+        } 
+        else if (myJobData === null) {
           return (
             <div style={{ textAlign: 'center', paddingTop: '50px' }}>
               <p style={{ fontSize: '30px', fontWeight: 'bold' }}>404 Page Not Found</p>
@@ -74,8 +76,6 @@ const Dashboard = () => {
         return <AssistantAI messages={assistantMessages} setMessages={setAssistantMessages} />;
       case 'AboutUs':
         return <AboutUs />;
-      case 'UserPage':
-        return <UserPage />;
       default:
         return <JobSearch />;
     }

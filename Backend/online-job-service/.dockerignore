@@ -1,2 +1,11 @@
 node_modules
 npm-debug.log
+
+/Backend/online-auth-service
+
+/Backend/online-ai-service
+
+/webui
+
+
+/logs

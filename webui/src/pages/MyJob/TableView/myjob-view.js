@@ -19,10 +19,10 @@ import { emptyRows, applyFilter, getComparator } from './utils';
 
 const categorizeStatus = (status) => {
   const categories = {
-    applied: ["Applied", "Application Submitted", "Application received", "Submitted", "Applied"],
-    rejected: ["Rejected", "Application Rejected", "Rejected due to insufficient German proficiency", "application rejected", "rejected"],
-    inProgress: ["Under Review", "Application Under Review", "Application received and under Review", "Application submitted, waiting for response", "Application under review", "Successfully submitted application, pending review", "Your application has been received and is under review", "Received", "Under Review", "We will be in contact with you as soon as possible.", "application sent and awaiting further processing"],
-    interviewsGiven: ["Interviews given"],
+    applied: ["Application sent", "Application submitted", "Application Received", "Received", "Application Completed", "Applied",],
+    rejected: ["Rejected", "Application Rejected", "Application Declined", "application declined", "Not Accepted", "Not Selected", "Not considered", "Application not taken into further consideration", "Application did not meet the requirements", "Your application has been reviewed for this position and while your profile is interesting, we have decided to pursue other candidates.", "Not able to move forward in the recruiting process with you", "rejected", "Not able to move forward in the recruiting process"],
+    inProgress: ["Application under review", "Under Review", "Your application has been received and is under review", "successfully submitted application, pending review", "We will be in contact with you as soon as possible.", "Application received and under review", "Application submitted, waiting for response", "successfully submitted application, pending review"],
+    interviewsGiven: ["you have been selected for next round", "selected"],
   };
 
   for (const category in categories) {
@@ -30,7 +30,7 @@ const categorizeStatus = (status) => {
       return category;
     }
   }
-  return "other";
+  return "applied";
 };
 
 export default function UserPage(props) {
@@ -115,8 +115,8 @@ export default function UserPage(props) {
           filterName={filterName}
           onFilterName={handleFilterByName}
         />
-
-
+        
+        
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 200 }}>
               <UserTableHead
@@ -156,7 +156,7 @@ export default function UserPage(props) {
               </TableBody>
             </Table>
           </TableContainer>
-
+        
         <TablePagination
           page={page}
           component="div"

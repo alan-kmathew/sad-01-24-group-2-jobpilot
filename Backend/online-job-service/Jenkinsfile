@@ -1,31 +1,48 @@
 
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
+    agent any
+   
+   environment {
+        HEROKU_API_KEY = credentials('heroku-api-key')
     }
-    environment {
-        CI = 'true'
-    }
+
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                dir('Backend/online-job-service') {
+                     bat 'npm install'
+                }
             }
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                script {
+                     dir('Backend/online-job-service') {
+                        bat 'npm run test'
+                     }
+                }
+            }
+            post {
+                failure {
+                    error 'Tests failed, stopping pipeline'
+                }
             }
         }
-        stage('Deliver') {
+        stage('Deploy') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+                 dir('Backend/online-job-service') {
+                        script {
+                            withCredentials([string(credentialsId: 'heroku-api-key', variable: 'HEROKU_API_KEY')]) {
+                                bat '"C:\\Program Files\\Heroku\\bin\\heroku" auth:token'                  
+                                bat '"C:\\Program Files\\Heroku\\bin\\heroku" container:login'
+                                bat '"C:\\Program Files\\Heroku\\bin\\heroku" container:push web --app online-job-service'
+                                bat '"C:\\Program Files\\Heroku\\bin\\heroku" container:release web --app online-job-service' 
+                            }
+
+                        }
+                    }
+                }
             }
+       
         }
     }
-}

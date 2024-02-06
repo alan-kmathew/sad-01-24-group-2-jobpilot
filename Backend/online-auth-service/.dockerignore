@@ -1,2 +1,11 @@
 node_modules
 npm-debug.log
+
+/Backend/online-ai-service
+
+/Backend/online-job-service
+
+/webui
+
+
+/logs

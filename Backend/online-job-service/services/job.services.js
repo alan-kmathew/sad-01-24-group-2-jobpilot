@@ -70,7 +70,7 @@ const getIdsFromApplications = async email => {
 const getJobApplicationDetails = async message => {
     try {
         const { data } = await axios.post(
-            `${process.env.ONLINE_AI_SERVICE_URL}ai/job/details`,
+            `${process.env.ONLINE_AI_SERVICE_URL}job/application/details`,
             {
                 message,
             },
@@ -85,6 +85,7 @@ const getJobApplicationDetails = async message => {
         logger.error(`Error while getting job applications details from ai-service: ${err} `);
     }
 };
+ 
 
 const refreshAccessToken = async (expiryDate, refreshToken) => {
     try {
