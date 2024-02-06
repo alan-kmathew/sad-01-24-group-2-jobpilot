@@ -17,12 +17,11 @@ pipeline {
 
         stage('Build') {
             // This stage will now proceed if the branch is 'main'
-            when {
-                branch DEPLOY_BRANCH
-            }
-            steps {
+         steps {
                 dir('webui') {
                     echo 'Building Frontend...'
+                    sh 'dir'
+                    sh 'ls'
                     sh 'npm install'
                     sh 'npm run build'
                     // Ensure the build artifacts are in the right location for deployment
