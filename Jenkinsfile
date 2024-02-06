@@ -29,7 +29,6 @@ pipeline {
         }
 
         stage('Deploy') {
-           
             steps {
                 dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
                     echo 'Deploying to Heroku...'
