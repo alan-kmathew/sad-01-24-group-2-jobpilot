@@ -29,9 +29,7 @@ pipeline {
         }
 
         stage('Deploy') {
-            when {
-                branch DEPLOY_BRANCH // Only deploy when on the main branch
-            }
+           
             steps {
                 dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
                     echo 'Deploying to Heroku...'
