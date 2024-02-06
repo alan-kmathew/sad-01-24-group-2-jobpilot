@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs 'nodejs'
+        docker 'docker'
     }
     environment {
         // These should be set in your Jenkins credentials and environment variables
