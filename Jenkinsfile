@@ -27,7 +27,7 @@ pipeline {
                     sh 'dir'
                     sh 'ls'
                     sh 'npm install'
-                    sh 'npm start'
+                    sh 'CI=false npm run build'
                     // Ensure the build artifacts are in the right location for deployment
                 }
             }
