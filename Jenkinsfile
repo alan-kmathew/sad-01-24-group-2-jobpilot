@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    
+
     tools {
         nodejs 'nodejs'
     }
@@ -28,7 +28,7 @@ pipeline {
                     sh 'dir'
                     sh 'ls'
                     sh 'npm install'
-                    sh 'CI=false npm run build'
+                    sh 'npm run build'
                     // Ensure the build artifacts are in the right location for deployment
                 }
             }
