@@ -33,7 +33,7 @@ pipeline {
                 dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
                     echo 'Deploying to Heroku...'
                     sh """
-                        sudo curl https://cli-assets.heroku.com/install.sh | sh
+                        heroku --version
                         heroku container:login
                         heroku container:push web -a $HEROKU_APP_NAME
                         heroku container:release web -a $HEROKU_APP_NAME
