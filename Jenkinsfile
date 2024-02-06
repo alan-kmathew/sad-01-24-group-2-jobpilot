@@ -4,12 +4,10 @@ pipeline {
         nodejs 'nodejs'
     }
 
-
     environment {
-        // These should be set in your Jenkins credentials and environment variables
-        HEROKU_API_KEY = credentials('HEROKU_API_KEY')
         HEROKU_APP_NAME = 'jenkins-front-end' // Your Heroku app name
         DEPLOY_BRANCH = 'main' // The branch from which deployments are allowed
+        DEPLOYMENT_DIR = 'deployment' // Directory path for Heroku deployment
     }
 
     stages {
@@ -19,27 +17,47 @@ pipeline {
             }
         }
 
+        stage('Prepare Deployment Directory') {
+            steps {
+                // Ensure the deployment directory is clean and ready
+                sh "rm -rf ${DEPLOYMENT_DIR}"
+                sh "mkdir -p ${DEPLOYMENT_DIR}"
+                // Use credentials to clone the Heroku app's Git repository into the deployment directory
+                withCredentials([usernamePassword(credentialsId: 'gitauth', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@git.heroku.com/${HEROKU_APP_NAME}.git ${DEPLOYMENT_DIR}"
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 dir('webui') {
                     echo 'Building Frontend...'
-                    sh 'dir'
                     sh 'npm ci' // Use npm ci for a cleaner, more reliable install based on package-lock.json
                     sh 'CI=false npm run build' // Build the project
+                    // Copy build artifacts to the deployment directory
+                    sh "cp -R build/* ../${DEPLOYMENT_DIR}"
                 }
             }
         }
 
         stage('Deploy') {
+            when {
+                branch DEPLOY_BRANCH
+            }
             steps {
-                dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
+                dir("${DEPLOYMENT_DIR}") {
                     echo 'Deploying to Heroku...'
-                    sh """
-                        heroku --version
-                        heroku container:login
-                        heroku container:push web -a $HEROKU_APP_NAME
-                        heroku container:release web -a $HEROKU_APP_NAME
-                    """
+                    // Use credentials to configure Git user and push changes
+                    withCredentials([usernamePassword(credentialsId: 'gitauth', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh """
+                            git config user.name "${GIT_USERNAME}"
+                            git config user.email "${GIT_USERNAME}@users.noreply.heroku.com"
+                            git add .
+                            git commit -m "Deployed by Jenkins"
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@git.heroku.com/${HEROKU_APP_NAME}.git master --force
+                        """
+                    }
                 }
             }
         }
@@ -47,13 +65,7 @@ pipeline {
 
     post {
         success {
-            script {
-                if (env.BRANCH_NAME == DEPLOY_BRANCH) {
-                    echo 'Deployment has been successful!'
-                } else {
-                    echo 'Build successful, deployment skipped due to branch conditions.'
-                }
-            }
+            echo 'Deployment has been successful!'
         }
         failure {
             echo 'Build or Deployment has failed.'
