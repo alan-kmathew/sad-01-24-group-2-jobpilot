@@ -1,18 +1,13 @@
 pipeline {
     agent any
-    
-    tools {
-        nodejs 'nodejs'
-    }
     environment {
-        // Assuming these are correctly set in your Jenkins credentials and environment
+        // These should be set in your Jenkins credentials and environment variables
         HEROKU_API_KEY = credentials('HEROKU_API_KEY')
         HEROKU_APP_NAME = 'jenkins-front-end' // Your Heroku app name
-        DEPLOY_BRANCH = 'main' // Adjusted to 'main' as it seems to be the branch you're using
+        DEPLOY_BRANCH = 'main' // The branch from which deployments are allowed
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -20,33 +15,28 @@ pipeline {
         }
 
         stage('Build') {
-            // This stage will now proceed if the branch is 'main'
-         steps {
+            steps {
                 dir('webui') {
                     echo 'Building Frontend...'
                     sh 'dir'
-                    sh 'ls'
-                    sh 'npm install'
-                    sh 'npm run build'
-                    // Ensure the build artifacts are in the right location for deployment
+                    sh 'npm ci' // Use npm ci for a cleaner, more reliable install based on package-lock.json
+                    sh 'npm run build' // Build the project
                 }
             }
         }
 
         stage('Deploy') {
-            // This stage will now proceed if the branch is 'main'
             when {
-                branch DEPLOY_BRANCH
+                branch DEPLOY_BRANCH // Only deploy when on the main branch
             }
             steps {
-                dir('webui') {
+                dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
                     echo 'Deploying to Heroku...'
-                    sh 'git init'
-                    sh 'heroku git:remote -a $HEROKU_APP_NAME'
-                    sh 'git add .'
-                    sh 'git commit -m "Deploy to Heroku"'
-                    // Force push to Heroku might be necessary if previous deployments have been made
-                    sh 'git push heroku HEAD:master --force'
+                    sh """
+                        heroku container:login
+                        heroku container:push web -a $HEROKU_APP_NAME
+                        heroku container:release web -a $HEROKU_APP_NAME
+                    """
                 }
             }
         }
@@ -54,12 +44,11 @@ pipeline {
 
     post {
         success {
-            // Only echo success if the deploy stage was executed
             script {
                 if (env.BRANCH_NAME == DEPLOY_BRANCH) {
                     echo 'Deployment has been successful!'
                 } else {
-                    echo 'Build successful, but deployment was skipped due to branch conditions.'
+                    echo 'Build successful, deployment skipped due to branch conditions.'
                 }
             }
         }
