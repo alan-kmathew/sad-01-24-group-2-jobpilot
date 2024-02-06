@@ -5,10 +5,10 @@ pipeline {
     }
 
     environment {
-        // These should be set in your Jenkins credentials and environment variables
+        // Use a long-lived Heroku authorization token for seamless authentication
         HEROKU_API_KEY = credentials('HEROKU_API_KEY')
-        HEROKU_APP_NAME = 'jenkins-front-end' // Your Heroku app name
-        DEPLOY_BRANCH = 'main' // The branch from which deployments are allowed
+        HEROKU_APP_NAME = 'jenkins-front-end'
+        DEPLOY_BRANCH = 'main'
     }
 
     stages {
@@ -22,23 +22,22 @@ pipeline {
             steps {
                 dir('webui') {
                     echo 'Building Frontend...'
-                    sh 'npm ci' // Use npm ci for a cleaner, more reliable install based on package-lock.json
-                    sh 'CI=false npm run build' // Build the project
+                    sh 'npm ci'
+                    sh 'CI=false npm run build'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                dir('webui/build') { // Assuming build artifacts are located in the 'build' directory within 'webui'
+                dir('webui/build') {
                     echo 'Deploying to Heroku...'
-                    sh """
+                    sh '''
                         heroku --version
-                        heroku whoami
-                        heroku login
-                        heroku git:remote -a $HEROKU_APP_NAME  # Add Heroku Git remote
-                        git push heroku HEAD:main -f  # Push code to Heroku
-                    """
+                        # Check for existing Git remote (optional)
+                        git remote -v | grep heroku || heroku git:remote -a $HEROKU_APP_NAME
+                        git push heroku HEAD:main -f
+                    '''
                 }
             }
         }
